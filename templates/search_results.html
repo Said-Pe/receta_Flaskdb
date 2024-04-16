@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Resultados de Búsqueda{% endblock %}
+
+{% block content %}
+    <title>Resultados de Búsqueda</title>
+
+<body>
+    <h1>Resultados de Búsqueda</h1>
+    <h2>A ver</h2>
+    {% if recipes %}
+    <ul>
+        {% for recipe in recipes %}
+        <li>
+            {{ recipe.name }}
+            <a href="{{ url_for('view_recipe', recipe_id=recipe.id) }}">Ver Detalles</a>
+            <a href="{{ url_for('update_recipe', recipe_id=recipe.id) }}">Actualizar</a>
+            <form action="{{ url_for('delete_recipe', recipe_id=recipe.id) }}" method="post">
+                <button type="submit">Eliminar</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No se encontraron recetas.</p>
+    {% endif %}
+
+{% endblock %}
+</body>
+

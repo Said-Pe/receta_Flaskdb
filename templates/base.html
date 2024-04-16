@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recetas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Bienvenido a la web de recetas de comida </h1>
+        <h2>Buscar Recetas</h2>
+<form action="{{ url_for('search_recipes') }}" method="post">
+    <label for="search_term">Término de búsqueda:</label>
+    <input type="text" id="search_term" name="search_term">
+    <input type="submit" value="Buscar">
+</form>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('index') }}">Inicio</a></li>
+                <li><a href="{{ url_for('add_recipe') }}">Agregar Receta</a></li>
+                <li><a href="{{ url_for('view_recipes') }}">Ver Recetas</a></li>
+
+            </ul>
+        </nav>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+        <p>&copy; 2023 Aplicación de Recetas</p>
+    </footer>
+</body>
+</html>

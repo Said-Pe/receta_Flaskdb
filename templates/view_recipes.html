@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Recetas</h2>
+    {% if recipes %}
+        <ul>
+            {% for recipe in recipes %}
+                <li>
+                    <h3>{{ recipe['name'] }}</h3>
+                    <p>Ingredientes:</p>
+                    <ul>
+                        {% for ingredient in recipe['ingredients'].split('\r\n') %}
+                            <li>{{ ingredient }}</li>
+                        {% endfor %}
+                    </ul>
+                    <p>Pasos:</p>
+                    <ol>
+                        {% for step in recipe['steps'].split('\r\n') %}
+                            <li>{{ step }}</li>
+                        {% endfor %}
+                    </ol>
+                    <a href="{{ url_for('update_recipe', recipe_id=recipe.id) }}">Actualizar</a>
+                    <form action="{{ url_for('delete_recipe', recipe_id=recipe.id) }}" method="post">
+                        <button type="submit">Eliminar</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No se encontraron recetas.</p>
+    {% endif %}
+{% endblock %}
