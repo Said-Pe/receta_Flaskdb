@@ -1,8 +1,24 @@
+from tasks import send_email
+from celerysetti import Celery  # Importa Celery desde celerysetti
 from flask import Flask, render_template, request, redirect, url_for
 import redis
 
+def make_celery(app):
+    celery = Celery(
+        app.import_name,
+        backend=app.config['CELERY_RESULT_BACKEND'],
+        broker=app.config['CELERY_BROKER_URL']
+    )
+    celery.conf.update(app.config)
+    return celery
+
 app = Flask(__name__)
 r = redis.Redis(host='localhost', port=6379, db=0)
+app.config.update(
+    CELERY_BROKER_URL='redis://localhost:6379/0',
+    CELERY_RESULT_BACKEND='redis://localhost:6379/0'
+)
+celery = make_celery(app)
 
 
 @app.route('/')
@@ -139,7 +155,24 @@ def search_recipes():
         return render_template('search_results.html', recipes=matched_recipes)
     else:
         return render_template('search_recipes.html')
+    
+@app.route('/send_email', methods=['GET', 'POST'])
+def send_email():
+    if request.method == 'POST':
+        subject = request.form['subject']
+        sender = request.form['sender']
+        recipients = request.form['recipients']
+        body = request.form['body']
+
+        # Llamar a la tarea Celery para enviar el correo electrónico de manera asíncrona
+       
+
+        # Redireccionar a la página principal o a una página de confirmación
+        return redirect(url_for('index'))
+    elif request.method == 'GET':
+        # Renderizar el formulario de envío de correo electrónico
+        return render_template('send_email.html')
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
